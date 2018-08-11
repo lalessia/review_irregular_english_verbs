@@ -19,6 +19,10 @@ input[type="text"]{
   font-size: 18px;
 }
 
+input[type="text"]:focus{
+  overflow: hidden;
+}
+
 #dropdownMenuButton{
   background-color: white;
   color: #000;
@@ -145,7 +149,21 @@ footer{
   margin: auto;
 }
 
+#inputInfinitive:focus{
+  outline: none;
+}
 
+#inputPast:focus{
+  outline: none;
+}
+
+#inputParticiple:focus{
+  outline: none;
+}
+
+#inputItalian:focus{
+  outline: none;
+}
 
 .dropdown-el {
   margin-top:20vh;

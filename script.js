@@ -43,14 +43,18 @@ function inizializeChallenge(){
 
   var userPreferences = getUserPreferences();
 
-  if(userPreferences === 'inputInfinitive'){
+  if(userPreferences === 'Infinitive'){
     uPreferences = '0';
-  } else if (userPreferences === 'inputPast') {
+    $('#inputInfinitive').prop('disabled', true);
+  } else if (userPreferences === 'Past') {
     uPreferences = '1';
-  } else if (userPreferences === 'inputParticiple') {
+    $('#inputPast').prop('disabled', true);
+  } else if (userPreferences === 'Participle') {
     uPreferences = '2';
-  } else if (userPreferences === 'inputItalian') {
+    $('#inputParticiple').prop('disabled', true);
+  } else if (userPreferences === 'Italian') {
     uPreferences = '3';
+    $('#inputItalian').prop('disabled', true);
   }
   $("#" + userPreferences).prop('disabled', true);
 }
@@ -81,43 +85,72 @@ function start(){
   }
 }
 
+function isInfOK(){
+  var inf = $("#inputInfinitive").val().toLowerCase();
+  var infOK = verbsArray[lastVerb[lastVerb.length - 1]][0];
+  if(inf !== infOK){
+    return false;
+  } else{
+    return true;
+  }
+}
+
+function isPastOK(){
+  var past = $("#inputPast").val().toLowerCase();
+  var pastOK = verbsArray[lastVerb[lastVerb.length - 1]][1];
+  if(past !== pastOK){
+    return false;
+  } else{
+    return true;
+  }
+}
+
+function isParticipleOK(){
+  var part = $("#inputParticiple").val().toLowerCase();
+  var partOK = verbsArray[lastVerb[lastVerb.length - 1]][2];
+  if(part !== partOK){
+    return false;
+  } else{
+    return true;
+  }
+}
+
+function isItalianOK(){
+  var it = $("#inputItalian").val().toLowerCase();
+  var itOK = verbsArray[lastVerb[lastVerb.length - 1]][3];
+  if(it !== itOK){
+    return false;
+  } else{
+    return true;
+  }
+}
+
 function confirm(){
   var up = getUserPreferences();
-
-  var inf = $("#inputInfinitive").val();
-  var past = $("#inputPast").val();
-  var part = $("#inputParticiple").val();
-  var it = $("#inputItalian").val();
 
   $("#inputInfinitive").css('background-color', 'white');
   $("#inputPast").css('background-color', 'white');
   $("#inputParticiple").css('background-color', 'white');
   $("#inputItalian").css('background-color', 'white');
 
-  var infOK = verbsArray[lastVerb[lastVerb.length - 1]][0];
-  var pastOK = verbsArray[lastVerb[lastVerb.length - 1]][1];
-  var partOK = verbsArray[lastVerb[lastVerb.length - 1]][2];
-  var itOK = verbsArray[lastVerb[lastVerb.length - 1]][3];
 
-  console.log(verbsArray[lastVerb[lastVerb.length - 1]]);
-
-  if(inf !== infOK){
+  if(!isInfOK()){
     $("#inputInfinitive").css('background-color', 'rgba(255, 0, 0, 0.2)');
   }
 
-  if(past !== pastOK){
+  if(!isPastOK()){
     $("#inputPast").css('background-color', 'rgba(255, 0, 0, 0.2)');
   }
 
-  if(part !== partOK){
+  if(!isParticipleOK()){
     $("#inputParticiple").css('background-color', 'rgba(255, 0, 0, 0.2)');
   }
 
-  if(it !== itOK){
+  if(!isItalianOK()){
     $("#inputItalian").css('background-color', 'rgba(255, 0, 0, 0.2)');
   }
 
-  if(inf === infOK && past === pastOK && part === partOK && it === itOK){
+  if(isInfOK() && isPastOK() && isParticipleOK() && isItalianOK()){
     $('#inputInfinitive').prop('value', '');
     $('#inputPast').prop('value', '');
     $('#inputParticiple').prop('value', '');
@@ -126,13 +159,54 @@ function confirm(){
   }
 }
 
+function giveHint(tense, numberTense){
+  var input = $("#input" + tense).val().toLowerCase();
+  var inputOK = verbsArray[lastVerb[lastVerb.length - 1]][numberTense];
+
+  var ls = 0;
+  ls = input.length;
+  var ss = 0;
+  ss = inputOK.substr(0, ls);
+  if(input === ss){
+    var newVal = '';
+    if(ls === 0){
+      $("#input" + tense).val(inputOK.charAt(0));
+    }else{
+      newVal = input + '' + inputOK.charAt(ls)
+      $("#input" + tense).val(newVal);
+    }
+
+  } else {
+    console.log('hai scritto male');
+  }
+}
+
 function getHint(){
-  alert('sto chiedendo aiuto di quanto scritto');
+  var myVerb = verbsArray[lastVerb[lastVerb.length - 1]];
+  console.log('myVerb: ' + myVerb);
+  /*
+  1 - controlla quanto è stato scritto
+  2 - se non è segnato nulla segna la prima/seconda...l'ennesima lettera
+  3 - se è segnato segna da dove è sbagliata la parola
+  4 -
+  */
+
+  if(!isInfOK()){
+    giveHint('Infinitive', 0);
+    //var itOK = verbsArray[lastVerb[lastVerb.length - 1]][3];
+  } else if (!isPastOK()) {
+    giveHint('Past', 1);
+  } else if (!isParticipleOK()) {
+    giveHint('Participle', 2);
+  }else if (!isItalianOK()) {
+    giveHint('Italian', 3);
+  }
 }
 
 function setVerbOnForm(verb){
   var userPreferences = getUserPreferences();
   userPreferences = 'input' + userPreferences;
+
   $('#' + userPreferences).prop('value', verbsArray[verb][uPreferences]);
 }
 
