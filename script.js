@@ -177,23 +177,28 @@ function giveHint(tense, numberTense){
     }
 
   } else {
-    console.log('hai scritto male');
+    // $("#input" + tense).css('background-color', 'white');
+    for(var i = 0; i < inputOK.length; i++){
+      if(inputOK.charAt(i) !== input.charAt(i)){
+        var correctString = '';
+        var wrongString = '';
+
+        correctString = input.substr(0, i);
+        //wrongString = input.substr(i, input.length);
+
+        $("#input" + tense).text(correctString);
+        //$("#inputItalian span").text(wrongString);
+        break;
+      }
+    }
   }
 }
 
 function getHint(){
   var myVerb = verbsArray[lastVerb[lastVerb.length - 1]];
-  console.log('myVerb: ' + myVerb);
-  /*
-  1 - controlla quanto è stato scritto
-  2 - se non è segnato nulla segna la prima/seconda...l'ennesima lettera
-  3 - se è segnato segna da dove è sbagliata la parola
-  4 -
-  */
 
   if(!isInfOK()){
     giveHint('Infinitive', 0);
-    //var itOK = verbsArray[lastVerb[lastVerb.length - 1]][3];
   } else if (!isPastOK()) {
     giveHint('Past', 1);
   } else if (!isParticipleOK()) {
